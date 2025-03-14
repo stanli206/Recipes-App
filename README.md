@@ -18,7 +18,7 @@ A simple CRUD application for managing recipes using Node.js, Express.js, and Mo
 - ❌ Delete a recipe
 - 📡 Uses MongoDB for data storage
 - 📜 API Documentation in Postman
-- 
+ 
 
 ## 🛠️ Tech Stack
 | Backend   | Database          | API Testing                   |

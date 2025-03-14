@@ -2,7 +2,6 @@
 A simple CRUD application for managing recipes using Node.js, Express.js, and MongoDB. This app follows the MVC pattern and provides RESTful API endpoints to create, read, update, and delete recipes.
 
 ## 📌 API Endpoints
-
 | Method   | Endpoint          | Description                   |
 |----------|------------------|-------------------------------|
 | **POST** | `/api/create-recipes`   | ➕ Create a new recipe        |
@@ -13,14 +12,19 @@ A simple CRUD application for managing recipes using Node.js, Express.js, and Mo
 
 
 ## 🚀 Features
-📝 Create new recipes
-📄 Retrieve all recipes or a single recipe by ID
-✏️ Update an existing recipe
-❌ Delete a recipe
-📡 Uses MongoDB for data storage
-📜 API Documentation in Postman
+- 📝 Create new recipes
+- 📄 Retrieve all recipes or a single recipe by ID
+- ✏️ Update an existing recipe
+- ❌ Delete a recipe
+- 📡 Uses MongoDB for data storage
+- 📜 API Documentation in Postman
+- 
 
 ## 🛠️ Tech Stack
-Backend: Node.js, Express.js
-Database: MongoDB, Mongoose
-API Testing: Postman
+| Backend   | Database          | API Testing                   |
+|----------|------------------|-------------------------------|
+| Node.js, Express.js | MongoDB, Mongoose  |  Postman      |
+
+
+
+

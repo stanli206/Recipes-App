@@ -1,83 +1,88 @@
+import { validationResult } from "express-validator";
 import Recipes from "../Models/recipes.schema.js";
 
-//create new recipe
+// Create new recipe
 export const createRecipes = async (req, res) => {
+  // Validate request
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   try {
-    const newRecipes = new Recipes(req.body);
-    await newRecipes.save();
+    const newRecipe = new Recipes(req.body);
+    await newRecipe.save();
     res
-      .status(200)
-      .json({ message: `Recipes Added successfully`, data: newRecipes });
+      .status(201)
+      .json({ message: "Recipe added successfully", data: newRecipe });
   } catch (error) {
-    res.status(500).json({ error: err.message });
-    console.log(error);
+    console.error("Create Recipe Error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
-//get All data from db
+// Get all recipes
 export const getAllRecipes = async (req, res) => {
   try {
-    const getRecipes = await Recipes.find();
-    res.status(200).json({ data: getRecipes });
+    const recipes = await Recipes.find();
+    res.status(200).json({ data: recipes });
   } catch (error) {
-    res.status(500).json({ error: err.message });
-    console.log(error);
+    console.error("Fetch Recipes Error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
-//get data(recipes) by id
+// Get recipe by ID
 export const getRecipeById = async (req, res) => {
   try {
     const recipe = await Recipes.findById(req.params.id);
     if (!recipe) return res.status(404).json({ message: "Recipe not found" });
-    res.json(recipe);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-    console.log(error);
+    res.status(200).json(recipe);
+  } catch (error) {
+    console.error("Get Recipe By ID Error:", error);
+    res.status(500).json({ error: "Invalid ID format" });
   }
 };
 
-//update by id
-//update by id
+// Update recipe by ID
 export const updateRecipe = async (req, res) => {
-    try {
-      const { name, ingredients, instructions, prepTime } = req.body;
-  
-      const recipe = await Recipes.findById(req.params.id);
-      if (!recipe) {
-        return res.status(404).json({ error: "Recipe not found" });
-      }
-  
-      if (name) recipe.name = name;
-      if (ingredients) recipe.ingredients = ingredients;
-      if (instructions) recipe.instructions = instructions;
-      if (prepTime) recipe.prepTime = prepTime;
-  
-      const updatedRecipe = await recipe.save();
-      res.json(updatedRecipe); // Send the updated recipe as the response
-    } catch (err) {
-      console.error("Update Recipe Error:", err); // Log the error
-      res.status(500).json({ error: err.message }); // Send error response
-    }
-  };
-
-//delete by id
-export const deleteRecipes = async (req, res) => {
-  try {
-    // Find the recipe first
-    const recipe = await Recipes.findById(req.params.id);
-    if (!recipe) {
-      return res.status(404).json({ error: "Recipe not found" });
-    }
-
-    // Remove the recipe
-    await recipe.deleteOne(); // Alternative to `findByIdAndDelete`
-
-    res.json({ message: "Recipe deleted successfully" });
-  } catch (err) {
-    console.error("Delete Recipe Error:", err);
-    res.status(500).json({ error: "Something went wrong" });
+  // Validate request
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
 
+  try {
+    const { name, ingredients, instructions, prepTime } = req.body;
+    const recipe = await Recipes.findById(req.params.id);
 
+    if (!recipe) return res.status(404).json({ error: "Recipe not found" });
+
+    if (name) recipe.name = name;
+    if (ingredients) recipe.ingredients = ingredients;
+    if (instructions) recipe.instructions = instructions;
+    if (prepTime) recipe.prepTime = prepTime;
+
+    const updatedRecipe = await recipe.save();
+    res
+      .status(200)
+      .json({ message: "Recipe updated successfully", data: updatedRecipe });
+  } catch (error) {
+    console.error("Update Recipe Error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Delete recipe by ID
+export const deleteRecipes = async (req, res) => {
+  try {
+    const recipe = await Recipes.findById(req.params.id);
+    if (!recipe) return res.status(404).json({ error: "Recipe not found" });
+
+    await recipe.deleteOne();
+    res.status(200).json({ message: "Recipe deleted successfully" });
+  } catch (error) {
+    console.error("Delete Recipe Error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
